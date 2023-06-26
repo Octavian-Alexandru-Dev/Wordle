@@ -54,38 +54,6 @@ public class Server {
                 keyIterator.remove();
             }
         }
-        /*
-         * // if (keyNum > 0) {
-         * for (SelectionKey key : this.selector.selectedKeys()) {
-         * // Utilizzo un thread pool per gestire le richieste
-         * threadPool.execute(() -> {
-         * try {
-         * if (key.isValid() && key.isReadable()) {
-         * handleRead(key);
-         * } else if (key.isValid() && key.isAcceptable()) {
-         * handleAccept(key);
-         * } else {
-         * System.out.println("[Server] La richiesta ricevuto non è stata riconosciuta"
-         * );
-         * // controllo se key isReadable
-         * System.out.println("[Server] isReadable: " + key.isReadable());
-         * System.out.println("[Server] isConnectable: " + key.isConnectable());
-         * }
-         * } catch (IOException e) {
-         * e.printStackTrace();
-         * }
-         * });
-         * }
-         * // } else {
-         * // System.out.println("[Server] Nessuna richiesta, attendo...");
-         * // try {
-         * // Thread.sleep(1000);
-         * // } catch (InterruptedException e) {
-         * // e.printStackTrace();
-         * // }
-         * // }
-         * }
-         */
     }
 
     private void handleAccept(SelectionKey key) throws IOException {
@@ -112,10 +80,9 @@ public class Server {
             SocketAddress clientAddress = clientChannel.getRemoteAddress();
             // Ottieni informazioni sull'indirizzo IP e la porta del client
             String clientInfo = clientAddress.toString();
-            System.out.println("Richiesta ricevuta dal client: " + clientInfo);
 
             if (!clientChannel.isConnected()) {
-                System.out.println("Connessione chiusa dal client: " + clientInfo);
+                System.out.println("[handleRead] Connessione chiusa dal client: " + clientInfo);
                 // La connessione è stata chiusa dal client
                 clientChannel.close();
                 key.cancel();
@@ -126,7 +93,7 @@ public class Server {
             int bytesRead = clientChannel.read(buffer);
 
             if (bytesRead == -1) {
-                System.out.println("Connessione chiusa dal client: " + clientInfo);
+                System.out.println("[handleRead] Connessione chiusa dal client: " + clientInfo);
                 // La connessione è stata chiusa dal client
                 clientChannel.close();
                 key.cancel();
@@ -143,7 +110,6 @@ public class Server {
 
                 // Invia la risposta al client
                 clientChannel.write(ByteBuffer.wrap(responseData));
-                System.out.println("Risposta inviata al client");
 
             }
         } catch (Exception e) {
@@ -160,10 +126,10 @@ public class Server {
     }
 
     private byte[] processRequest(byte[] request) {
-        System.out.println("Richiesta ricevuta: " + new String(request));
+        System.out.println("[processRequest] Richiesta ricevuta => " + new String(request));
 
         // TODO: Implementare l'elaborazione della richiesta
-        return "Ciao, sono il server\n".getBytes();
+        return "Pong\n".getBytes();
     }
 
     public void stop() throws IOException {

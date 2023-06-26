@@ -47,8 +47,6 @@ public class Config {
     }
 
     private static String getAbsoluteDirectory() {
-        String className = Config.class.getName();
-        System.out.println("Il nome della classe è: " + className);
         String classPath = Config.class.getResource("Config.class").toString();
 
         if (classPath.startsWith("file:")) {
