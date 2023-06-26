@@ -2,6 +2,7 @@ package Server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class Parser {
@@ -20,13 +21,14 @@ public class Parser {
     }
 
     // converte un array di byte in un JsonElement
-    public static JsonElement parse(byte[] data) {
+    public static JsonObject parse(byte[] data) {
         String string = new String(data);
 
         JsonParser parser = new JsonParser();
         JsonElement jsonElement = parser.parse(string);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-        return jsonElement;
+        return jsonObject;
     }
 
     // converte un oggetto in un JsonElement
