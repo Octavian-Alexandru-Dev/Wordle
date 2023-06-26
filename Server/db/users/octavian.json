@@ -1,0 +1,23 @@
+{
+    "credentials": {
+        "auth": "token codificato in base64"
+    },
+    "statistics": {
+        "partiteGiocate": 10,
+        "vittorie": 70,
+        "serieAttuale": 3,
+        "serieMassima": 5,
+        "distribuzioneTentativi": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    }
+}

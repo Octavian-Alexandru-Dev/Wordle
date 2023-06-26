@@ -1,0 +1,40 @@
+{
+    "register": {
+        "operation": "register",
+        "payload": {
+            "username": "admin",
+            "password": "admin"
+        }
+    },
+    "login": {
+        "operation": "login",
+        "payload": {
+            "username": "admin",
+            "password": "admin"
+        }
+    },
+    "logout": {
+        "operation": "logout",
+        "payload": {
+            "username": "admin"
+        }
+    },
+    "playWORDLE": {
+        "operation": "playWORDLE"
+    },
+    "sendWord": {
+        "operation": "sendWord",
+        "payload": {
+            "word": "parola da 10 caratteri"
+        }
+    },
+    "sendMeStatistics": {
+        "operation": "sendMeStatistics"
+    },
+    "share": {
+        "operation": "share"
+    },
+    "showMeSharing": {
+        "operation": "showMeSharing"
+    }
+}
