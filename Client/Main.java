@@ -11,16 +11,20 @@ public class Main {
             // Connessione al server
             client.connect();
 
-            // Invia la richiesta al server
-            byte[] requestData = "Ping\n".getBytes();
+            byte[][] requests = new byte[3][];
+            requests[0] = "{\"method\": \"sendWord\", \"guessedWord\": \"parola da 10 caratteri\"}".getBytes();
+            requests[1] = "{\"method\": \"login\", \"credentials\": \"admin:admin codificato in Base64\"}".getBytes();
+            requests[2] = "Ping\n".getBytes();
 
-            byte[] responseData = client.sendRequest(requestData);
+            for (int i = 0; i < requests.length; i++) {
+                // Invia la richiesta al server
+                byte[] responseData = client.sendRequest(requests[i]);
 
-            if (responseData != null) {
-                String response = new String(responseData);
-                System.out.println("Risposta => " + response);
+                if (responseData != null) {
+                    String response = new String(responseData);
+                    System.out.println("Risposta => " + response);
+                }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

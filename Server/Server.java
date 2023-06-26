@@ -18,7 +18,7 @@ public class Server {
     private Selector selector;
     private ServerSocketChannel serverSocketChannel;
     private ExecutorService threadPool;
-    private long maxDelay = 5000;
+    private long maxDelay = 3000;
 
     public Server(int port, int poolSize) throws IOException {
         selector = Selector.open();
@@ -33,7 +33,7 @@ public class Server {
         System.out.println("[Server] In ascolto sulla porta " + serverSocketChannel.socket().getLocalPort() + "...");
         while (true) {
 
-            int readyChannels = this.selector.select(2000);
+            int readyChannels = this.selector.select(maxDelay);
             if (readyChannels == 0)
                 continue;
             Set<SelectionKey> selectedKeys = selector.selectedKeys();
@@ -106,7 +106,7 @@ public class Server {
                 buffer.get(requestData);
 
                 // Esegue l'elaborazione del dato ricevuto
-                byte[] responseData = processRequest(requestData);
+                byte[] responseData = processRequest(requestData, clientInfo);
 
                 // Invia la risposta al client
                 clientChannel.write(ByteBuffer.wrap(responseData));
@@ -125,11 +125,8 @@ public class Server {
         return !serverSocketChannel.socket().isClosed();
     }
 
-    private byte[] processRequest(byte[] request) {
-        System.out.println("[processRequest] Richiesta ricevuta => " + new String(request));
-
-        // TODO: Implementare l'elaborazione della richiesta
-        return "Pong\n".getBytes();
+    private byte[] processRequest(byte[] request, String id) {
+        return User.handleRequest(request, id);
     }
 
     public void stop() throws IOException {

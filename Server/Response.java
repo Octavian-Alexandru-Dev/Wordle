@@ -3,11 +3,15 @@ package Server;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 
 class Response {
 
     public static JsonElement creat(Status status, String message) {
-        JsonObject json = new JsonObject();
+        Gson gson = new Gson();
+        JsonElement jsonElement = gson.toJsonTree(null);
+        JsonObject json = jsonElement.getAsJsonObject();
+
         json.addProperty("status", getStatusCode(status));
         json.addProperty("message", getStatusMessage(status) + message);
         return json;

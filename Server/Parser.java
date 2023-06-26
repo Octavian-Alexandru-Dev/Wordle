@@ -2,48 +2,34 @@ package Server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class Parser {
-    private static Gson gson;
 
-    // singleton of gson with double checked locking
-    private static Gson getGsonInstace() {
-        if (gson == null) {
-            synchronized (Parser.class) {
-                if (gson == null) {
-                    gson = new Gson();
-                }
-            }
-        }
-        return gson;
-    }
-
-    // converte un array di byte in un JsonElement
-    public static JsonObject parse(byte[] data) {
-        String string = new String(data);
-
-        JsonParser parser = new JsonParser();
-        JsonElement jsonElement = parser.parse(string);
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
-
-        return jsonObject;
-    }
+    //// converte un array di byte in un JsonObject
+    // public static Request deserializeRequest(byte[] data) {
+    // String stringRequest = new String(data);
+    // Gson gson = new Gson();
+    // Type requestType = new TypeToken<Request>() {
+    // }.getType();
+    //
+    // Request rm = gson.fromJson(stringRequest, requestType);
+    // return rm;
+    // }
 
     // converte un oggetto in un JsonElement
     public JsonElement toJson(Object object) {
+        Gson gson = new Gson();
         return gson.toJsonTree(object);
     }
 
     public static byte[] serialize(Object object) {
-        gson = getGsonInstace();
+        Gson gson = new Gson();
         String jsonString = gson.toJson(object);
         return jsonString.getBytes();
     }
 
     public static <T> T deserialize(byte[] bytes, Class<T> clazz) {
-        gson = getGsonInstace();
+        Gson gson = new Gson();
         String jsonString = new String(bytes);
         return gson.fromJson(jsonString, clazz);
     }

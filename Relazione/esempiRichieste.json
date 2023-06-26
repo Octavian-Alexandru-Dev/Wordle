@@ -1,40 +1,30 @@
 {
     "register": {
-        "operation": "register",
-        "payload": {
-            "username": "admin",
-            "password": "admin"
-        }
+        "method": "register",
+        "credentials": "admin:admin codificato in Base64"
     },
     "login": {
-        "operation": "login",
-        "payload": {
-            "username": "admin",
-            "password": "admin"
-        }
+        "method": "login",
+        "credentials": "admin:admin codificato in Base64"
     },
     "logout": {
-        "operation": "logout",
-        "payload": {
-            "username": "admin"
-        }
+        "method": "logout",
+        "credentials": "admin:admin codificato in Base64"
     },
     "playWORDLE": {
-        "operation": "playWORDLE"
+        "method": "playWORDLE"
     },
     "sendWord": {
-        "operation": "sendWord",
-        "payload": {
-            "word": "parola da 10 caratteri"
-        }
+        "method": "sendWord",
+        "guessedWord": "parola da 10 caratteri"
     },
     "sendMeStatistics": {
-        "operation": "sendMeStatistics"
+        "method": "sendMeStatistics"
     },
     "share": {
-        "operation": "share"
+        "method": "share"
     },
     "showMeSharing": {
-        "operation": "showMeSharing"
+        "method": "showMeSharing"
     }
 }

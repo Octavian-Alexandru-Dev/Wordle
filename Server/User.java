@@ -1,8 +1,9 @@
-package Server;
+package src.Server;
 
 import java.util.Base64;
 import java.util.concurrent.ConcurrentHashMap;
-import com.google.gson.JsonObject;
+
+import com.google.gson.JsonElement;
 
 public class User {
     // stringa codificato in base64 che contiene username e password
@@ -28,7 +29,8 @@ public class User {
     }
 
     public static byte[] handleRequest(byte[] request, String id) {
-        Request req = new Request(Parser.parse(request));
+        System.out.println("[processRequest] Richiesta ricevuta => " + new String(request));
+        Request req = Parser.deserialize(request, Request.class);
         if (!req.isValid()) {
             System.out.println("[handleRequest] Invalid request");
             System.out.println("[handleRequest] request =>" + request.toString());
@@ -38,36 +40,42 @@ public class User {
         // controllo se l'utente è registrato
         if (users.containsKey(id)) {
             // se l'utente è registrato, restituisco il suo stato
-            User user = users.get(id);
+            // User user = users.get(id);
 
         } else {
+            System.out.println("[handleRequest] L'utente non è presente nella hashmap");
             // se non è presente nella hashmap, mi aspetto che il tipo di richiesta che ho
             // ricevuto sia di registrazione, login
-            if (req.isRegisterRequest()) {
-                System.out.println("[handleRequest] User not registered");
-                return null;
-            } else if (req.isLoginRequest()) {
-                System.out.println("[handleRequest] User not registered");
-                return null;
-            } else {
-                System.out.println("[handleRequest] User not registered");
-                return null;
-            }
+            User user = new User(req.getCredentials(), id);
 
-            // se l'utente non è registrato, lo registro e restituisco il suo stato
-            // users.put(id, new User("", id));
+            if (req.isRegisterRequest()) {
+                return user.registerRequesthandler(req);
+            } else if (req.isLoginRequest()) {
+                return user.loginRequestHandler(req);
+            } else {
+                JsonElement response = Response.creat(Response.Status.UNAUTHORIZED, "");
+                return Parser.serialize(response);
+            }
         }
 
         return null;
     }
 
-    public String getPassword() {
+    private byte[] registerRequesthandler(Request req) {
+        return "ora sei registrato".getBytes();
+    }
+
+    private byte[] loginRequestHandler(Request req) {
+        return "ora sei loggato".getBytes();
+    }
+
+    private String getPassword() {
         String decodedString = new String(Base64.getDecoder().decode(this.credentials));
         String[] parts = decodedString.split(":");
         return parts[1];
     }
 
-    public String getUsername() {
+    private String getUsername() {
         String decodedString = new String(Base64.getDecoder().decode(this.credentials));
         String[] parts = decodedString.split(":");
         return parts[0];

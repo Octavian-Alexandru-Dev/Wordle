@@ -1,16 +1,18 @@
-package Server;
+package src.Server;
 
 import com.google.gson.JsonObject;
 
 public class Request {
 
-    private Method method;
+    private Method method = Method.INVALID;
 
-    // nel caso di registrazione, login e logout, il payload è una stringa
+    // se è una richiesta con metodo REGISTER, LOGIN o LOGOUT è stringa
     // codificata in base64
-    // nel caso di una richiesta di gioco, potrebbe essere o la Guessed Word oppure
-    // stringa vuota
-    private String payload;
+    private String credentials = "";
+
+    // se è una richiesta con metodo "PLAY_WORDLE" allora contine la Guessed Word
+    // alrimenti stringa vuota
+    private String guessedWord = "";
 
     public Request(JsonObject request) {
         setMethod(request);
@@ -25,8 +27,12 @@ public class Request {
         return method;
     }
 
-    public String getPayload() {
-        return payload;
+    public String getCredentials() {
+        return credentials;
+    }
+
+    public String getGuessedWord() {
+        return guessedWord;
     }
 
     private void setMethod(JsonObject reqObject) {
@@ -57,21 +63,17 @@ public class Request {
     private void setPayload(JsonObject reqObject) {
         if (method == Method.REGISTER || method == Method.LOGIN || method == Method.LOGOUT) {
             if (reqObject.get("credentials") == null) {
-                payload = "";
                 method = Method.INVALID;
                 return;
             }
-            payload = reqObject.get("credentials").getAsString();
+            credentials = reqObject.get("credentials").getAsString();
 
         } else if (method == Method.SEND_WORD) {
-            if (reqObject.get("word") == null) {
-                payload = "";
+            if (reqObject.get("guessedWord") == null) {
                 method = Method.INVALID;
                 return;
             }
-            payload = reqObject.get("word").getAsString();
-        } else {
-            this.payload = "";
+            guessedWord = reqObject.get("guessedWord").getAsString();
         }
     }
 
