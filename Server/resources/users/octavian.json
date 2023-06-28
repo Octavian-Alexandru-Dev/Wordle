@@ -1,0 +1,27 @@
+{
+  "credentials": "b2N0YXZpYW46b2N0YXZpYW4\u003d",
+  "lastWord": "petaloso",
+  "hasFinishMatch": false,
+  "statistics": {
+    "currentAttemps": 0,
+    "playedMatches": 24,
+    "wonMatches": 23,
+    "streakWin": 2,
+    "maxStreakWin": 18,
+    "winPercentage": 0,
+    "guessDistribution": [
+      0,
+      14,
+      3,
+      4,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ]
+  }
+}

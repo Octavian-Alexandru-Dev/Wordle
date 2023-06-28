@@ -1,9 +1,9 @@
-package Server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.ClosedSelectorException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
 import java.util.Iterator;
 
 public class Server {
@@ -31,29 +32,32 @@ public class Server {
 
     public void start() throws IOException {
         System.out.println("[Server] In ascolto sulla porta " + serverSocketChannel.socket().getLocalPort() + "...");
-        while (true) {
-
-            int readyChannels = this.selector.select(maxDelay);
-            if (readyChannels == 0)
-                continue;
-            Set<SelectionKey> selectedKeys = selector.selectedKeys();
-            Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
-            while (keyIterator.hasNext()) {
-                SelectionKey key = keyIterator.next();
-                try {
-                    if (key.isValid() && key.isReadable()) {
-                        handleRead(key);
-                    } else if (key.isValid() && key.isAcceptable()) {
-                        handleAccept(key);
-                    } else {
-                        System.out.println("[Server] La richiesta ricevuto non è stata riconosciuta");
+        try {
+            while (true) {
+                int readyChannels = this.selector.select(maxDelay);
+                if (readyChannels == 0)
+                    continue;
+                Set<SelectionKey> selectedKeys = selector.selectedKeys();
+                Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
+                while (keyIterator.hasNext()) {
+                    SelectionKey key = keyIterator.next();
+                    try {
+                        if (key.isValid() && key.isReadable()) {
+                            handleRead(key);
+                        } else if (key.isValid() && key.isAcceptable()) {
+                            handleAccept(key);
+                        } else {
+                            System.out.println("[Server] La richiesta ricevuto non è stata riconosciuta");
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    keyIterator.remove();
                 }
-                keyIterator.remove();
             }
+        } catch (ClosedSelectorException e) {
         }
+
     }
 
     private void handleAccept(SelectionKey key) throws IOException {
@@ -83,6 +87,7 @@ public class Server {
 
             if (!clientChannel.isConnected()) {
                 System.out.println("[handleRead] Connessione chiusa dal client: " + clientInfo);
+                Client.logout(clientInfo);
                 // La connessione è stata chiusa dal client
                 clientChannel.close();
                 key.cancel();
@@ -94,6 +99,7 @@ public class Server {
 
             if (bytesRead == -1) {
                 System.out.println("[handleRead] Connessione chiusa dal client: " + clientInfo);
+                Client.logout(clientInfo);
                 // La connessione è stata chiusa dal client
                 clientChannel.close();
                 key.cancel();
@@ -104,29 +110,37 @@ public class Server {
                 // crea un array di byte della dimensione del buffer
                 byte[] requestData = new byte[buffer.remaining()];
                 buffer.get(requestData);
-
+                System.out.println(clientInfo + " Richiesta => " + new String(requestData));
                 // Esegue l'elaborazione del dato ricevuto
                 byte[] responseData = processRequest(requestData, clientInfo);
+                // System.out.println("Risposta => " + new String(responseData));
 
                 // Invia la risposta al client
                 clientChannel.write(ByteBuffer.wrap(responseData));
-
             }
         } catch (Exception e) {
             System.err.println("[Server] Errore durante l'handling della richiesta: " + e.getMessage());
             e.printStackTrace();
-        } finally {
-            key.cancel();
         }
-
     }
 
     public boolean isRunning() {
         return !serverSocketChannel.socket().isClosed();
     }
 
-    private byte[] processRequest(byte[] request, String id) {
-        return User.handleRequest(request, id);
+    private byte[] processRequest(byte[] req, String id) {
+        try {
+            // deserializzo la richiesta
+            Request request = new Request(req);
+            Response response = Handler.handleRequest(request, id);
+            return Parser.serialize(response);
+            // Invio la
+        } catch (Exception e) {
+            System.out.println("[handleRequest] Invalid request");
+            System.out.println("[handleRequest] request =>" + new String(req));
+            e.printStackTrace();
+            return Parser.serialize(new Response(Response.Status.INTERNAL_SERVER_ERROR, "Invalid request"));
+        }
     }
 
     public void stop() throws IOException {

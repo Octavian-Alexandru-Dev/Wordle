@@ -1,0 +1,27 @@
+{
+  "credentials": "YWRtaW46YWRtaW4\u003d",
+  "lastWord": "uncautious",
+  "hasFinishMatch": true,
+  "statistics": {
+    "playedMatches": 6,
+    "winPercentage": 0.0,
+    "wonMatches": 4,
+    "streakWin": 1,
+    "maxStreakWin": 3,
+    "guessDistribution": [
+      0,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "currentAttemps": 12
+  }
+}

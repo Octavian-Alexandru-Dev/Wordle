@@ -1,23 +1,29 @@
-package Server;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 import java.io.File;
 
 public class Config {
+    public static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    public static DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
     // Attributi di configurazione
     public static int PLAYER_MAX_ATTEMPTS;
     public static int WORDS_LENGTH;
+    public static int WORDS_DURATION;
     public static int DEFAULT_PORT;
-    public static int WORDDURATION;
     public static int MULTICAST_PORT;
     public static int THREAD_POOL_SIZE;
     public static String MULTICAST_GROUP;
     public static String DEFAULT_HOST;
 
+    public static String USER_FILE_PATH = getAbsoluteDirectory() + "resources/users/";
+    public static String WORDS_FILE_PATH = getAbsoluteDirectory() + "resources/words.txt";
+    public static String SECRET_WORD_FILE_PATH = getAbsoluteDirectory() + "resources/lastSecretWord.json";
+
     // Percorso del file di configurazione
-    private static final String CONFIG_FILE_PATH_RELATIVE = "/db/server.properties";
+    private static final String CONFIG_FILE_PATH_RELATIVE = "/resources/server.properties";
 
     private static boolean loaded = loadConfig();
 
@@ -32,7 +38,7 @@ public class Config {
             PLAYER_MAX_ATTEMPTS = Integer.parseInt(properties.getProperty("PLAYER_MAX_ATTEMPTS"));
             WORDS_LENGTH = Integer.parseInt(properties.getProperty("WORDS_LENGTH"));
             DEFAULT_PORT = Integer.parseInt(properties.getProperty("DEFAULT_PORT"));
-            WORDDURATION = Integer.parseInt(properties.getProperty("WORDDURATION"));
+            WORDS_DURATION = Integer.parseInt(properties.getProperty("WORDS_DURATION"));
             MULTICAST_PORT = Integer.parseInt(properties.getProperty("MULTICAST_PORT"));
             MULTICAST_GROUP = properties.getProperty("MULTICAST_GROUP");
             DEFAULT_HOST = properties.getProperty("DEFAULT_HOST");
@@ -41,6 +47,7 @@ public class Config {
             System.out.println("[Config] Configurazione caricata");
             return true;
         } catch (IOException e) {
+            System.out.println("[Config] Errore: caricamento della configurazione");
             e.printStackTrace();
             return false;
         }
@@ -52,10 +59,10 @@ public class Config {
         if (classPath.startsWith("file:")) {
             String filePath = classPath.substring("file:".length());
             File file = new File(filePath);
-            return file.getParent();
+            return file.getParent() + "/../";
         }
 
-        return null;
+        return "";
     }
 
     // Metodo per controllare se la configurazione e' stata caricata

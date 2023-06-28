@@ -1,0 +1,27 @@
+{
+  "credentials": "ZnJhOmZyYQ\u003d\u003d",
+  "lastWord": "flunkyhood",
+  "hasFinishMatch": false,
+  "statistics": {
+    "playedMatches": 21,
+    "winPercentage": 85.71429,
+    "wonMatches": 18,
+    "streakWin": 1,
+    "maxStreakWin": 4,
+    "guessDistribution": [
+      7,
+      8,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0
+    ],
+    "currentAttemps": 12
+  }
+}
