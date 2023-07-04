@@ -101,4 +101,22 @@ public class Client {
             }
         }
     }
+
+    // class Listener extends Thread {
+    // private Selector selector;
+    //
+    // public Listener() {
+    // try {
+    // selector = Selector.open();
+    // } catch (IOException e) {
+    // System.out.println("Errore nella creazione del selector");
+    // e.printStackTrace();
+    // }
+    //
+    // }
+    //
+    // public void run() {
+    //
+    // }
+    // }
 }

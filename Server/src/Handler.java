@@ -31,13 +31,10 @@ public class Handler {
                 return sendMeStatisticsHandler(req, connID, client);
 
             } else if (req.isShareRequest()) {
-                // TODO
-            } else if (req.isShowMeSharingRequest()) {
-                // TODO
+                return shareHandler(req, connID, client);
             } else {
                 return new Response(Response.Status.INTERNAL_SERVER_ERROR, " TODO");
             }
-            return new Response(Response.Status.INTERNAL_SERVER_ERROR, " TODO");
         } else {
             System.out.println("[handleRequest] L'utente non è presente nella hashmap");
             // se non è presente nella hashmap, mi aspetto che il tipo di richiesta che ho
@@ -161,6 +158,18 @@ public class Handler {
             JsonElement message = client.sendMeStatistics();
             if (message != null) {
                 return new Response(Response.Status.OK, client.sendMeStatistics());
+            } else {
+                return new Response(Response.Status.INTERNAL_SERVER_ERROR, "");
+            }
+        }
+    }
+
+    private static Response shareHandler(Request req, String connID, Client client) {
+        if (!client.isLogged()) {
+            return new Response(Response.Status.UNAUTHORIZED, "Non sei loggato");
+        } else {
+            if (client.share()) {
+                return new Response(Response.Status.OK, "");
             } else {
                 return new Response(Response.Status.INTERNAL_SERVER_ERROR, "");
             }

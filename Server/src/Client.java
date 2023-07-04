@@ -80,6 +80,26 @@ public class Client {
         }
     }
 
+    public boolean share() {
+        if (this.player != null) {
+            // genero il json da con le statistiche del giocatore
+            JsonElement statistics = this.player.getStatistics();
+            // creo il json da inviare
+            JsonObject response = new JsonObject();
+            // aggiungo le statistiche e l'username
+            response.addProperty("username", this.username);
+            response.add("statistics", statistics);
+            // invio il json in multicast
+            if (Multicast.share(Parser.serialize(response))) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     public JsonElement sendMeStatistics() {
         if (this.player != null) {
             return this.player.getStatistics();

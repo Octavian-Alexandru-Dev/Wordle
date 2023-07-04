@@ -1,40 +1,23 @@
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) {
-
-        Client client = new Client("localhost", 8000);
+        // Leggo il file di configurazione
+        if (!Config.isLoaded()) {
+            System.out.println("[Main] Errore: lettura dei parametri di configurazione");
+            return;
+        }
+        // Creazione del client
+        Client client = new Client(Config.SERVER_HOST, Config.SERVER_PORT);
 
         try {
+            // Avvio del multicast
+            Multicast.getInstance().start();
+
+            // Creazione del gioco
             Game game = new Game(client);
             game.play();
-
-            // byte[] responseData = client
-            // .sendRequest(Parser.serialize(new AuthRequest("register",
-            // encodeCredentials("admin", "admin"))));
-            // String response = new String(responseData);
-            // System.out.println("Risposta => " + response);
-            //
-            // responseData = client
-            // .sendRequest(Parser.serialize(new AuthRequest("login",
-            // encodeCredentials("admin", "admin"))));
-            // response = new String(responseData);
-            // System.out.println("Risposta => " + response);
-            //
-            // responseData = client
-            // .sendRequest(Parser.serialize(new AuthRequest("register",
-            // encodeCredentials("pippo", "admin"))));
-            // response = new String(responseData);
-            // System.out.println("Risposta => " + response);
-            //
-            // responseData = client
-            // .sendRequest(Parser.serialize(new AuthRequest("register",
-            // encodeCredentials("octavian", "admin"))));
-            // response = new String(responseData);
-            // System.out.println("Risposta => " + response);
 
         } catch (Exception e) {
             e.printStackTrace();

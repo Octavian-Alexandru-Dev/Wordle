@@ -20,13 +20,11 @@ public class Parser {
     }
 
     public static byte[] serialize(Object object) {
-        // Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonString = gson.toJson(object);
         return jsonString.getBytes();
     }
 
     public static JsonElement toJsonElement(Object object) {
-        // Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJsonTree(object);
     }
 
@@ -36,17 +34,4 @@ public class Parser {
         return gson.fromJson(jsonString, clazz);
     }
 
-    // private static String dateTimeToString(LocalDateTime date) {
-    // DateTimeFormatter formatter =
-    // DateTimeFormatter.ofPattern(Config.DATE_FORMAT);
-    // String formattedDate = date.format(formatter);
-    // return formattedDate;
-    // }
-    //
-    // private static LocalDateTime stringToDateTime(String dateString) {
-    // DateTimeFormatter formatter =
-    // DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-    // LocalDateTime dateTime = LocalDateTime.parse(dateString, formatter);
-    // return dateTime;
-    // }
 }

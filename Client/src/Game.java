@@ -1,10 +1,7 @@
 
-import java.io.ObjectInputFilter.Config;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class Game {
@@ -43,23 +40,31 @@ public class Game {
         this.winStatus = false;
     }
 
+    public void showMeSharing() {
+        System.out.println("\nHai scelto " + Color.yellow("SHOWMESHARING"));
+        Multicast.showNotifications(this.username);
+    }
+
     public void sendMeStatistics() {
-        System.out.println("\nHai scelto SENDMESTATISTICS");
+        System.out.println("\nHai scelto " + Color.yellow("SENDMESTATISTICS"));
         Request request = new Request("sendMeStatistics");
         JsonObject response = client.sendRequest(request);
         if (response.get("status").getAsInt() == 200) {
             System.out.println("Statistiche:");
             JsonObject jsonStatistics = response.get("message").getAsJsonObject();
             Statistics statistics = new Statistics(jsonStatistics);
+            statistics.print();
+        } else {
+            System.out.println("Errore nel recupero delle statistiche");
+        }
+    }
 
-            System.out.println("Partite giocate: " + statistics.playedMatches);
-            System.out.println("Partite vinte: " + statistics.wonMatches);
-            System.out.println("Percentuale di vittoria: " + statistics.winPercentage + "%");
-            // System.out.println("Partite perse: " +
-            // statistics.get("lostMatches").getAsInt());
-            System.out.println("Steak di vittorie attuali: " + statistics.streakWin);
-            System.out.println("Steak di vittorie massime: " + statistics.maxStreakWin);
-            System.out.println("Distribuzione tentativi: " + statistics.getguessDistribution());
+    public void share() {
+        System.out.println("\nHai scelto " + Color.yellow("SHARE"));
+        Request request = new Request("share");
+        JsonObject response = client.sendRequest(request);
+        if (response.get("status").getAsInt() == 200) {
+            System.out.println("Condivisione effettuata con successo !!");
         } else {
             System.out.println("Errore nel recupero delle statistiche");
         }
@@ -76,7 +81,7 @@ public class Game {
     }
 
     private void playWORDLE() {
-        System.out.println("\nHai scelto PLAYWORDLE");
+        System.out.println("\nHai scelto " + Color.yellow("PLAYWORDLE"));
         Request request = new Request("playWORDLE");
         JsonObject response = client.sendRequest(request);
         if (response.get("status").getAsInt() == 200) {
@@ -109,20 +114,13 @@ public class Game {
     }
 
     private void sendWord() {
-        // if (endAt.isBefore(LocalTime.now())) {
-        // // se la parola è scaduta allora resetto le variabili che rapresentano lo
-        // stato
-        // // di gioco
-        // newSecretWord();
-        // }
-        // Controllo se la partita è gia stata vinta
         if (this.winStatus && endAt.isAfter(LocalTime.now())) {
             System.out.println("\nHai già indovinato la Secret Word !!");
             System.out.println("La prossima Secret Word sarà disponibile alle " + Color.yellow(endAt.toString()));
             return;
         }
 
-        System.out.println("\nHai scelto SENDWORD");
+        System.out.println("\nHai scelto " + Color.yellow("SENDWORD"));
         System.out.println("Hai ancora " + remainingAttempts + " tentativi");
 
         System.out.println("Digita 'exit' per uscire tornare al menu principale");
@@ -212,7 +210,7 @@ public class Game {
     }
 
     private void logout() {
-        System.out.println("\nHai scelto Logout");
+        System.out.println("\nHai scelto " + Color.yellow("Logout"));
         AuthRequest authRequest = new AuthRequest("logout", this.username);
         JsonObject response = client.sendRequest(authRequest);
         if (response.get("status").getAsInt() == 200) {
@@ -226,7 +224,7 @@ public class Game {
     }
 
     private void login() {
-        System.out.println("\nHai scelto LOGIN");
+        System.out.println("\nHai scelto " + Color.yellow("LOGIN"));
         System.out.println("Digita 'exit' per uscire tornare al menu principale");
         String[] credentials = this.input.readCredentials();
         if (!credentials[0].equals("exit")) {
@@ -247,7 +245,7 @@ public class Game {
     }
 
     private void register() {
-        System.out.println("\nHai scelto REGISTER");
+        System.out.println("\nHai scelto " + Color.yellow("REGISTER"));
         System.out.println("Digita 'exit' per uscire tornare al menu principale");
         String[] credentials = this.input.readCredentials();
         if (!credentials[0].equals("exit")) {
@@ -313,6 +311,10 @@ public class Game {
         this.started = true;
     }
 
+    public String getUsername() {
+        return this.username;
+    }
+
     private void performOperation(int op, Operation[] ops) {
         // converto l'operazione in un intero
         try {
@@ -340,10 +342,10 @@ public class Game {
                         sendMeStatistics();
                         break;
                     case SHARE:
-                        System.out.println("Hai scelto Share");
+                        share();
                         break;
                     case SHOWMESHARING:
-                        System.out.println("Hai scelto Showmesharing");
+                        showMeSharing();
                         break;
                     case REFRESH:
                         break;

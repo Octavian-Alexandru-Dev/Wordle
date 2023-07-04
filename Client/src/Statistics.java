@@ -1,5 +1,4 @@
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class Statistics {
@@ -32,5 +31,14 @@ public class Statistics {
             s += (i + 1) + ") " + guessDistribution[i] + "\n";
         }
         return s;
+    }
+
+    public void print() {
+        System.out.println("Partite giocate: " + playedMatches);
+        System.out.println("Partite vinte: " + wonMatches);
+        System.out.println("Percentuale di vittoria: " + winPercentage + "%");
+        System.out.println("Steak di vittorie attuali: " + streakWin);
+        System.out.println("Steak di vittorie massime: " + maxStreakWin);
+        System.out.println("Distribuzione tentativi: " + getguessDistribution());
     }
 }

@@ -66,7 +66,6 @@ public class PlayerStatistics {
         }
         // aggiorno la percentuale di vittorie
         this.winPercentage = ((float) this.wonMatches / (float) this.playedMatches) * 100;
-        System.out.println("Percentuale di vittorie: " + this.winPercentage + "%");
         // aggiorno la distribuzione delle risposte
         this.guessDistribution[currentAttemps - 1]++;
         this.currentAttemps = 0;
