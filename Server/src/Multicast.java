@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Multicast {
     private static Multicast instance = getInstance();

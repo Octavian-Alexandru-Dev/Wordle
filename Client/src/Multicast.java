@@ -4,6 +4,7 @@ import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.google.gson.JsonObject;
 
@@ -17,9 +18,12 @@ public class Multicast extends Thread {
 
     private static ConcurrentLinkedQueue<JsonObject> notifications;
     private static Multicast instance = getInstance();
+    // variabile atomica che indica se il multicasting è attivo
+    public static AtomicBoolean active;
 
     private Multicast() {
         try {
+            active = new AtomicBoolean(false);
             notifications = new ConcurrentLinkedQueue<JsonObject>();
             MULTICAST_PORT = Config.MULTICAST_PORT;
             MULTICAST_GROUP = Config.MULTICAST_GROUP;
@@ -42,6 +46,7 @@ public class Multicast extends Thread {
 
     @Override
     public void run() {
+        System.out.println("Starting multicast thread ...");
         if (this.joinGroup()) {
             this.awaitNotifications();
         }
@@ -61,6 +66,7 @@ public class Multicast extends Thread {
 
     private void awaitNotifications() {
         System.out.println("Awaiting notifications...");
+        active = new AtomicBoolean(true);
         while (!isInterrupted()) {
             // ricevo il pacchetto
             byte[] buffer = new byte[1024];
@@ -97,23 +103,21 @@ public class Multicast extends Thread {
             Statistics statistic = Parser.deserialize(Parser.serialize(message), Statistics.class);
             // se la notifica e' per l'utente
             if (!myUsername.equals(username)) {
-                System.out.println("=====================================");
                 System.out.println(Color.yellow("Statiche dell'utente: " + username));
                 statistic.print();
-                System.out.println("=====================================");
             } else {
-                System.out.println("=====================================");
                 System.out.println(Color.green("Queste sono le tue statistiche"));
                 statistic.print();
-                System.out.println("=====================================");
             }
         }
 
     }
 
-    public void stopMulticast() {
+    public static void stopMulticast() {
         if (instance.isAlive()) {
+            System.out.println("Stopping multicast...");
             instance.interrupt();
+            System.out.println("Multicast stopped");
         }
     }
 }

@@ -34,11 +34,13 @@ public class Statistics {
     }
 
     public void print() {
+        System.out.println("=====================================");
         System.out.println("Partite giocate: " + playedMatches);
         System.out.println("Partite vinte: " + wonMatches);
         System.out.println("Percentuale di vittoria: " + winPercentage + "%");
         System.out.println("Steak di vittorie attuali: " + streakWin);
         System.out.println("Steak di vittorie massime: " + maxStreakWin);
         System.out.println("Distribuzione tentativi: " + getguessDistribution());
+        System.out.println("=====================================");
     }
 }

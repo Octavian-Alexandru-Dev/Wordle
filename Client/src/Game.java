@@ -237,6 +237,11 @@ public class Game {
                 this.isRegistered = true;
                 // salvo l'username
                 this.username = credentials[0];
+                // Avvio del multicast
+                Multicast.getInstance().start();
+                while (!Multicast.active.get()) {
+                    // aspetto che il multicast sia attivo
+                }
             } else {
                 System.out.println("Login fallito");
                 System.out.println("Risposta => " + response.toString());
@@ -267,6 +272,9 @@ public class Game {
     private void exit() {
         System.out.println("Uscita dal gioco ...");
         this.started = false;
+        stop();
+        Multicast.stopMulticast();
+        System.exit(0);
     }
 
     private void newSecretWord(LocalTime endAt) {

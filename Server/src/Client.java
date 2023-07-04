@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Client {
     public final static ConcurrentHashMap<String, Client> clients = new ConcurrentHashMap<String, Client>();
-    private final static String RESOURCES_PATH = "resources/users/";
+    private final static String RESOURCES_PATH = Config.USER_FILE_PATH;
 
     // stringa codificato in base64 che contiene username e password
     private String credentials;
@@ -239,13 +239,6 @@ public class Client {
     }
 
     private String getPath() {
-        String classPath = Client.class.getResource("Config.class").toString();
-
-        if (classPath.startsWith("file:")) {
-            String filePath = classPath.substring("file:".length());
-            File file = new File(filePath);
-            return file.getParent() + "/../" + RESOURCES_PATH + this.username + ".json";
-        }
-        return "";
+        return RESOURCES_PATH + this.username + ".json";
     }
 }

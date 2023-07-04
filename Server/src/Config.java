@@ -18,19 +18,19 @@ public class Config {
     public static String MULTICAST_GROUP;
     public static String DEFAULT_HOST;
 
-    public static String USER_FILE_PATH = getAbsoluteDirectory() + "resources/users/";
-    public static String WORDS_FILE_PATH = getAbsoluteDirectory() + "resources/words.txt";
-    public static String SECRET_WORD_FILE_PATH = getAbsoluteDirectory() + "resources/lastSecretWord.json";
+    public static String USER_FILE_PATH = "./resources/users/";
+    public static String WORDS_FILE_PATH = "./resources/words.txt";
+    public static String SECRET_WORD_FILE_PATH = "resources/lastSecretWord.json";
 
     // Percorso del file di configurazione
-    private static final String CONFIG_FILE_PATH_RELATIVE = "/resources/server.properties";
+    private static final String CONFIG_FILE_PATH_RELATIVE = "./resources/server.properties";
 
     private static boolean loaded = loadConfig();
 
     // Metodo per caricare la configurazione
     public static boolean loadConfig() {
-        try (FileInputStream fileInputStream = new FileInputStream(
-                getAbsoluteDirectory() + CONFIG_FILE_PATH_RELATIVE)) {
+        String directory = CONFIG_FILE_PATH_RELATIVE;// getAbsoluteDirectory() + CONFIG_FILE_PATH_RELATIVE;
+        try (FileInputStream fileInputStream = new FileInputStream(directory)) {
             Properties properties = new Properties();
             properties.load(fileInputStream);
 
@@ -61,8 +61,8 @@ public class Config {
             File file = new File(filePath);
             return file.getParent() + "/../";
         }
-
-        return "";
+        System.out.println("[Config] Errore: impossibile trovare il percorso assoluto");
+        return "./";
     }
 
     // Metodo per controllare se la configurazione e' stata caricata

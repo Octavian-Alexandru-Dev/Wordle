@@ -12,9 +12,6 @@ public class Main {
         Client client = new Client(Config.SERVER_HOST, Config.SERVER_PORT);
 
         try {
-            // Avvio del multicast
-            Multicast.getInstance().start();
-
             // Creazione del gioco
             Game game = new Game(client);
             game.play();
