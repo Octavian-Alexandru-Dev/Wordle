@@ -23,14 +23,13 @@ public class Config {
     public static String SERVER_HOST;
 
     // Percorso del file di configurazione
-    private static final String CONFIG_FILE_PATH_RELATIVE = "/resources/client.properties";
+    private static final String CONFIG_FILE_PATH_RELATIVE = "./resources/client.properties";
 
     private static boolean loaded = loadConfig();
 
     // Metodo per caricare la configurazione
     public static boolean loadConfig() {
-        try (FileInputStream fileInputStream = new FileInputStream(
-                getAbsoluteDirectory() + CONFIG_FILE_PATH_RELATIVE)) {
+        try (FileInputStream fileInputStream = new FileInputStream(CONFIG_FILE_PATH_RELATIVE)) {
             Properties properties = new Properties();
             properties.load(fileInputStream);
 
@@ -45,12 +44,6 @@ public class Config {
             SERVER_PORT = Integer.parseInt(properties.getProperty("SERVER_PORT"));
             SERVER_HOST = properties.getProperty("SERVER_HOST");
 
-            System.out.println("MULTICAST_PORT: " + MULTICAST_PORT);
-            System.out.println("MULTICAST_GROUP: " + MULTICAST_GROUP);
-            System.out.println("MULTICAST_INTERFACE: " + MULTICAST_INTERFACE);
-            System.out.println("SERVER_PORT: " + SERVER_PORT);
-            System.out.println("SERVER_HOST: " + SERVER_HOST);
-
             System.out.println("[Config] Configurazione caricata");
             return true;
         } catch (IOException e) {
@@ -58,18 +51,6 @@ public class Config {
             e.printStackTrace();
             return false;
         }
-    }
-
-    private static String getAbsoluteDirectory() {
-        String classPath = Config.class.getResource("Config.class").toString();
-
-        if (classPath.startsWith("file:")) {
-            String filePath = classPath.substring("file:".length());
-            File file = new File(filePath);
-            return file.getParent() + "/../";
-        }
-
-        return "";
     }
 
     // Metodo per controllare se la configurazione e' stata caricata

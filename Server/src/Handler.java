@@ -77,20 +77,20 @@ public class Handler {
 
     private static Response loginRequestHandler(Request req, String connID, Client client) {
         if (!client.isRegistered()) {// se l'utente non è registrato
-            return new Response(Response.Status.NOT_FOUND, ": sei non registrato");
+            return new Response(Response.Status.NOT_FOUND, "Non sei registrato");
 
         } else if (client.isLogged()) {// se l'utente è già loggato
-            return new Response(Response.Status.METHOD_NOT_ALLOWED, ": sei già loggato");
+            return new Response(Response.Status.METHOD_NOT_ALLOWED, "Sei già loggato");
 
             // se l'utente è già loggato con un altro client
         } else if (Player.loggedPlayer.containsKey(client.getUsername())) {
-            return new Response(Response.Status.CONFLICT, ": l'clientname risulta già loggato con un altro client");
+            return new Response(Response.Status.CONFLICT, "Risulta che il tuo sià già loggato con un altro client");
         } else {// se si deve loggare
             String opResult = client.login();
             if (opResult.equals("OK")) {
-                return new Response(Response.Status.OK, ": ora sei loggato");
+                return new Response(Response.Status.OK, "Ora sei loggato");
             } else if (opResult.equals("WRONG_CREDENTIALS")) {
-                return new Response(Response.Status.UNAUTHORIZED, ": credenziali errate");
+                return new Response(Response.Status.UNAUTHORIZED, "Credenziali errate");
             } else {
                 return new Response(Response.Status.INTERNAL_SERVER_ERROR, "");
             }
@@ -105,13 +105,13 @@ public class Handler {
             // restituisco errore
             // se non esiste, creo il file e lo popolo con i dati dell'utente
             if (client.isLogged()) {
-                return new Response(Response.Status.METHOD_NOT_ALLOWED, "sei già loggato");
+                return new Response(Response.Status.METHOD_NOT_ALLOWED, "Sei già loggato");
             }
             if (client.isRegistered()) {
                 return new Response(Response.Status.CONFLICT, "utente già registrato");
             } else {
                 if (client.register()) {
-                    return new Response(Response.Status.OK, "ora sei registrato");
+                    return new Response(Response.Status.OK, "Ora sei registrato");
                 } else {
                     return new Response(Response.Status.INTERNAL_SERVER_ERROR, "");
                 }

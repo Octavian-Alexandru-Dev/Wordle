@@ -1,8 +1,10 @@
 
 class Response {
-
+    // Status code
     private int status;
+    // Status message
     private String statusMessage;
+    // Message
     private Object message;
 
     public Response(Status status, Object message) {
@@ -39,19 +41,19 @@ class Response {
     private String getStatusMessage(Status status) {
         switch (status) {
             case OK:
-                return "200 OK";
+                return "OK";
             case BAD_REQUEST:
-                return "400 Bad Request";
+                return "Bad Request";
             case UNAUTHORIZED:
-                return "401Unauthorized";
+                return "Unauthorized";
             case NOT_FOUND:
-                return "404 Not Found ";
+                return "Not Found ";
             case METHOD_NOT_ALLOWED:
-                return "405 Method Not Allowed";
+                return "Method Not Allowed";
             case CONFLICT:
-                return "409 Conflict";
+                return "Conflict";
             case INTERNAL_SERVER_ERROR:
-                return "500 Internal Server Error";
+                return "Internal Server Error";
             default:
                 return "";
         }

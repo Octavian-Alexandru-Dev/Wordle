@@ -9,7 +9,7 @@ public class Main {
         }
 
         try {
-            Server server = new Server(Config.DEFAULT_PORT, Config.THREAD_POOL_SIZE);
+            Server server = new Server(Config.DEFAULT_HOST, Config.DEFAULT_PORT, Config.THREAD_POOL_SIZE);
             SecretWord secretWord = new SecretWord();
 
             Runtime.getRuntime().addShutdownHook(new TerminationHandler(server, secretWord));

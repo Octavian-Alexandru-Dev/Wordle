@@ -18,13 +18,15 @@ public class Client {
     private String credentials;
     private String username;
     private String password;
+    private Player player;
+    private String path;
 
     // l'id è rappresentato da l'indirizzo ip:porta del client
     private String connID;
+    // indica se il client è registrato
     private boolean isRegistered;
+    // indica se il client è loggato
     private boolean isLogged;
-    private Player player;
-    private String path;
 
     // inizio della sessione di login
     private long loginTime;
@@ -53,9 +55,6 @@ public class Client {
         System.out.println("Salvataggio delle statistiche di tutti i giocatori ...");
         for (Client client : clients.values()) {
             client.logout();
-            // if (client.isPlaying()) {
-            // client.player.writeStatistics();
-            // }
         }
     }
 
@@ -156,6 +155,7 @@ public class Client {
                 if (username.equals(this.username) && password.equals(this.password)) {
                     this.isLogged = true;
                     this.loginTime = System.currentTimeMillis();
+                    Player.loggedPlayer.put(this.username,true);
                     System.out.println("Login dell'utente: " + this.username);
                     return "OK";
                 } else {

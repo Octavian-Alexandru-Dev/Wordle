@@ -6,7 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class Player {
-    public static final ConcurrentHashMap<String, Boolean> loggedPlayer = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<String, Boolean> loggedPlayer = new ConcurrentHashMap<>();
     private final String path;
     private Client client;
     private String username;
@@ -18,11 +18,7 @@ public class Player {
     // indica quando il giocatore può giocare di nuovo
     // viene settato quando il giocatore vince o perde una partita
     // serve sopratutto quando il server si riavvia e per lo stato del giocatore
-    private boolean hasFinishMatch;
-    // serve per indicare se la parola è cambiata
-    // viene settato a true quando la parola cambia
-    // viene settato a false dopo che al client è stata inviato "WORD_CHANGED"
-    // private boolean wordChanged;
+    private volatile boolean hasFinishMatch;
 
     public Player(Client client) {
         this.client = client;

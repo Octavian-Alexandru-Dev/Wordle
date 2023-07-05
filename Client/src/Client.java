@@ -20,17 +20,21 @@ public class Client {
             this.clientChannel = SocketChannel.open();
             this.clientChannel.configureBlocking(true);
             this.clientChannel.connect(this.serverSocketAddress);
-
             while (!this.clientChannel.finishConnect()) {
                 // Attendi la connessione al server
             }
-
             System.out.println(
                     "[Client] Connessione al server avvenuta con successo: " + this.serverSocketAddress.toString());
         } catch (IOException e) {
             System.out.println("Errore durante la creazione della connessione");
-            e.printStackTrace();
-            throw e;
+            if (e.getMessage().equals("Connection refused")) {
+                // se il server non è raggiungibile
+                System.out.println(Color.redBackground("Il server è spento o non raggiungibile"));
+                System.exit(1);
+            } else {
+                e.printStackTrace();
+                throw e;
+            }
         }
     }
 
@@ -69,23 +73,20 @@ public class Client {
         try {
             int bytesRead = clientChannel.read(buffer);
             if (bytesRead == -1) {
-                // TODO: gestire la chiusura della connessione da parte del server cercando di
-                // riconnettersi
-                System.out.println("[Client] Connessione chiusa dal server");
+                System.out.println(Color.redBackground("Il server ha chiuso la connessione"));
                 close();
+                System.exit(1);
                 return null;
             } else {
-                // System.out.println("[Client] Ricevuti " + bytesRead + " byte dal server");
                 buffer.flip();
                 byte[] responseData = new byte[buffer.remaining()];
-                // System.out.println("[Client] Totale byte letti: " + responseData.length);
                 buffer.get(responseData);
-                // System.out.println("[Client] Risposta ricevuta dal server");
                 return responseData;
             }
         } catch (IOException e) {
             System.out.println("Errore nella ricezione della risposta dal server");
             close();
+            System.exit(1);
             return new byte[] {};
         }
 
@@ -95,28 +96,10 @@ public class Client {
         if (clientChannel != null && clientChannel.isOpen()) {
             try {
                 clientChannel.close();
-                System.out.println("[Client] Ho chiuso la connessione chiusa");
+                System.out.println("Ho chiuso la connessione");
             } catch (IOException e) {
-                System.out.println("[Client] Errore nella chiusura della connessione");
+                System.out.println("Errore nella chiusura della connessione");
             }
         }
     }
-
-    // class Listener extends Thread {
-    // private Selector selector;
-    //
-    // public Listener() {
-    // try {
-    // selector = Selector.open();
-    // } catch (IOException e) {
-    // System.out.println("Errore nella creazione del selector");
-    // e.printStackTrace();
-    // }
-    //
-    // }
-    //
-    // public void run() {
-    //
-    // }
-    // }
 }

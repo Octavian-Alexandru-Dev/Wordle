@@ -24,7 +24,7 @@ public class SecretWord {
     private final static char YELLOW = 'Y';// indica il carattere presente ma nella posizione sbagliata
     private final static char GREEN = 'G';// indica il carattere presente e nella posizione giusta
 
-    private static String secretWord;
+    private volatile static String secretWord;
     private static LocalDateTime startAt;
     private static LocalDateTime endAt;
     private static boolean stop = false;

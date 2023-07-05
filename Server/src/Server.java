@@ -21,11 +21,13 @@ public class Server {
     private ExecutorService threadPool;
     private long maxDelay = 3000;
 
-    public Server(int port, int poolSize) throws IOException {
+    public Server(String hostname, int port, int poolSize) throws IOException {
         selector = Selector.open();
         serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
-        serverSocketChannel.socket().bind(new InetSocketAddress(port));
+        // Associa il canale al socket
+        serverSocketChannel.socket().bind(new InetSocketAddress(hostname, port));
+        // Registra il canale con il selettore per l'operazione di accettazione
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
         threadPool = Executors.newFixedThreadPool(poolSize);
     }
@@ -34,25 +36,29 @@ public class Server {
         System.out.println("[Server] In ascolto sulla porta " + serverSocketChannel.socket().getLocalPort() + "...");
         try {
             while (true) {
+                // Seleziona un insieme di chiavi il cui canale è pronto per l'operazione di I/O
                 int readyChannels = this.selector.select(maxDelay);
-                if (readyChannels == 0)
-                    continue;
-                Set<SelectionKey> selectedKeys = selector.selectedKeys();
-                Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
-                while (keyIterator.hasNext()) {
-                    SelectionKey key = keyIterator.next();
-                    try {
-                        if (key.isValid() && key.isReadable()) {
-                            handleRead(key);
-                        } else if (key.isValid() && key.isAcceptable()) {
-                            handleAccept(key);
-                        } else {
-                            System.out.println("[Server] La richiesta ricevuto non è stata riconosciuta");
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                if (readyChannels != 0) {
+                    Set<SelectionKey> selectedKeys = selector.selectedKeys();
+                    Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
+                    while (keyIterator.hasNext()) {
+                        SelectionKey key = keyIterator.next();
+                        // esegue l'operazione di I/O in un thread separato
+                        threadPool.execute(() -> {
+                            try {
+                                if (key.isValid() && key.isReadable()) {
+                                    handleRead(key);
+                                } else if (key.isValid() && key.isAcceptable()) {
+                                    handleAccept(key);
+                                } else {
+                                    System.out.println("[Server] La richiesta ricevuto non è stata riconosciuta");
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            keyIterator.remove();
+                        });
                     }
-                    keyIterator.remove();
                 }
             }
         } catch (ClosedSelectorException e) {
@@ -62,11 +68,15 @@ public class Server {
 
     private void handleAccept(SelectionKey key) throws IOException {
         try {
+            // Ottieni il canale del server
             ServerSocketChannel serverChannel = (ServerSocketChannel) key.channel();
+            // Accetta la connessione con il client
             SocketChannel clientChannel = serverChannel.accept();
 
             if (clientChannel != null) {
+                // Imposta il canale in modalità non bloccante
                 clientChannel.configureBlocking(false);
+                // Registra il canale con il selettore per l'operazione di lettura
                 clientChannel.register(selector, SelectionKey.OP_READ);
                 System.out.println(
                         "[Server] Nuova connessione accettata: " + clientChannel.getRemoteAddress().toString());

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import com.google.gson.JsonObject;
 
 public class Game {
-    private final static int MAX_ATTEMPTS = 12;
-    public final static int WORDS_LENGTH = 10;
+    private final static int MAX_ATTEMPTS = Config.PLAYER_MAX_ATTEMPTS;
+    public final static int WORDS_LENGTH = Config.WORDS_LENGTH;
 
     private boolean started;
     private Client client;
@@ -139,8 +139,6 @@ public class Game {
             System.out.println(
                     "La prossima Secret Word sarà disponibile alle " + Color.yellow(endAt.toString()));
             this.hasFinishedMatch = true;
-            // System.out.println("remainingAttempts: " + remainingAttempts);
-            // System.out.println("wordsTried: " + this.wordsTried.size());
             return;
         }
 
