@@ -21,5 +21,5 @@
 hs_err_pid*
 replay_pid*
 
-.DS_Store
+*.DS_Store
 /.metadata/

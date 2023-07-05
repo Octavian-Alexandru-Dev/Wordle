@@ -1,27 +1,4 @@
- <style>
-    img.logo{   
-        position: fixed;
-            top: 0px;
-            right: 16px;
-    }
-    b.copyright{
-        position: fixed;
-        bottom: 8px;
-        right: 16px;
-    }
-</style>
-
-<b class="copyright">
-        &copy; Octavian Alexandru
-</b>
-
-<img class="logo" src="./unipi_logo.svg" width="100">
-
-**Octavian Alexandru Mat. 616817**
-
-<hr style="margin-top:20px"></hr>
-
-## Progetto Laboratorio 3 - **WORDLE: un gioco di parole 3.0**
+## Progetto Laboratorio 3 Unipi - **WORDLE: un gioco di parole 3.0**
 
 ### **Connessione al server**
 
@@ -55,12 +32,6 @@ Questa è la struttura del file json che rappresenta un utente:
 
 > Da notare che le credenziali vengono scritte utilizzando la codifica **Base64**.
 
-<div style="page-break-after: always; visibility: hidden">
-\pagebreak
-</div>
-
-<hr style="margin-top:55px"></hr>
-
 Quando un client tenta di effetuare il **login** viene effetuato un controllo per verificare che non ci sia gia un'altro client collegato con lo stesso **username**.
 Questo insieme al fatto che una volta che il client invia una richiesta si mette in attesa della risposta, permette di assumere che non ci saranno mai più thread che tentano di modificare i dati di un utente contemporaneamente.
 
@@ -90,12 +61,6 @@ Questo il formato per delle richieste e delle eventuali risposte:
 >   "message": "Ora sei registrato" // contiene un messaggio utile da restituire come feedback al giocare
 > }
 > ```
-
-<div style="page-break-after: always; visibility: hidden">
-\pagebreak
-</div>
-
-<hr style="margin-top:55px"></hr>
 
 > **login( )**:
 >
@@ -134,12 +99,6 @@ Questo il formato per delle richieste e delle eventuali risposte:
 >   "message": "Logout effettuato con successo" // contiene un messaggio utile da restituire come feedback al giocare
 > }
 > ```
-
-<div style="page-break-after: always; visibility: hidden">
-\pagebreak
-</div>
-
-<hr style="margin-top:55px"></hr>
 
 > **playWORDLE( )**:
 >
@@ -181,12 +140,6 @@ Questo il formato per delle richieste e delle eventuali risposte:
 > }
 > ```
 
-<div style="page-break-after: always; visibility: hidden">
-\pagebreak
-</div>
-
-<hr style="margin-top:55px"></hr>
-
 > **sendWord( )**:
 >
 > ```json
@@ -221,12 +174,6 @@ Questo il formato per delle richieste e delle eventuali risposte:
 >   }
 > }
 > ```
-
-<div style="page-break-after: always; visibility: hidden">
-\pagebreak
-</div>
-
-<hr style="margin-top:55px"></hr>
 
 > **sendMeStatistics( )**:
 >
@@ -269,12 +216,6 @@ Nel **Server** sono presenti almeno 3 thread attivi contemporaneamente:
 - **Secret Word thread**: si occupa di generare una nuova Secret Word, e di segnalare alla classe Client che la Secret Word è cambiata
 - **thread di terminazione**: si occupa di gestire la terminazione del server
 
-<div style="page-break-after: always; visibility: hidden">
-\pagebreak
-</div>
-
-<hr style="margin-top:55px"></hr>
-
 Oltre a questi thread, ci sono anche i **thread di gestione delle richieste** che si occupano di gestire le richieste dei client e fornire le relative risposte. Il numero di questi thread è gestito utilizzando un **thread pool** di dimensione fissa, basato sulla variabile **THREAD_POOL_SIZE**.
 
 #### Interruzione e chiusura server
@@ -292,12 +233,6 @@ Per implementare questa funzionalità, è stata utilizzata una **ConcurrentHashM
 Per gestire la **Secret Word**, è stata utilizzata una variabile **volatile**.
 
 Il **Client** per gestire la ricezione delle statistiche degli altri utenti è stata utilizzata una **ConcurrentLinkedQueue** che mantiene al suo interno le statistiche degli utenti che sono state ricevute dal Client.
-
-<div style="page-break-after: always; visibility: hidden">
-\pagebreak
-</div>
-
-<hr style="margin-top:55px"></hr>
 
 ### **Compilazione ed esecuzione**
 
@@ -339,12 +274,6 @@ Una volta spostati nella cartella desiderata è possibile compilare ed eseguire 
 > java -jar Client.jar
 > ```
 
-<div style="page-break-after: always; visibility: hidden">
-\pagebreak
-</div>
-
-<hr style="margin-top:55px"></hr>
-
 > #### **Server**
 >
 > ##### compilazione:
@@ -378,12 +307,6 @@ Una volta spostati nella cartella desiderata è possibile compilare ed eseguire 
 > ```bash
 > java -jar Server.jar
 > ```
-
-<div style="page-break-after: always; visibility: hidden">
-\pagebreak
-</div>
-
-<hr style="margin-top:55px"></hr>
 
 ### **Paramentri di configurazione**
 
